@@ -14,7 +14,7 @@
 #include <boost/utility/string_view.hpp>
 #include <boost/endian/conversion.hpp>
 
-#include "util/StringUtil.hpp"
+#include "StringUtil.hpp"
 
 namespace dbf {
 class DBFBuffer {
@@ -122,12 +122,12 @@ public:
     if (view.empty()) {
       return 0;
     }
-    return util::stringViewToInt<T>(view);
+    return stringViewToInt<T>(view);
   }
 
   template <size_t FieldLen, size_t PrecisionSize, typename T> T readInt() {
     auto view = readStringView<FieldLen>();
-    return util::floatStringViewToInt<FieldLen, PrecisionSize, T>(view);
+    return floatStringViewToInt<FieldLen, PrecisionSize, T>(view);
   }
 
   template <size_t FieldLen> inline std::string readString() {
@@ -241,7 +241,7 @@ public:
   template <size_t FieldLen, typename T> inline void appendInt(T val) {
     ensureWritableBytes(FieldLen);
     boost::string_view view(beginWrite(), FieldLen);
-    util::intToStringView<T>(val, view);
+    intToStringView<T>(val, view);
     append<FieldLen>(view);
   }
 
@@ -249,7 +249,7 @@ public:
   inline void appendInt(T val) {
     ensureWritableBytes(FieldLen);
     boost::string_view view(beginWrite(), FieldLen);
-    util::intToFloatStringView<FieldLen, PrecisionSize, T>(val, view);
+    intToFloatStringView<FieldLen, PrecisionSize, T>(val, view);
     append<FieldLen>(view);
   }
 
