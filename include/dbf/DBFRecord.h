@@ -17,13 +17,7 @@ public:
 
 public:
   virtual void parseFrom(DBFBuffer &buf) {
-    if (buf.readChar() == 0x20) {
-      recordDelete_ = false;
-    } else if (buf.readChar() == 0x2A) {
-      recordDelete_ = true;
-    } else {
-      SPDLOG_WARN("read record delete tag failed");
-    }
+    setRecordDelete(buf.readChar());
   }
 
   virtual void serializeTo(DBFBuffer &buf) const {
@@ -33,6 +27,17 @@ public:
   virtual void parseFromJson(const nlohmann::json &) {}
   virtual void serializeToJson(nlohmann::json &) const {}
   virtual std::string toString() const { return ""; }
+
+  bool recordDelete() const { return recordDelete_; }
+  void setRecordDelete(char recordDelete) {
+    if (recordDelete == 0x20) {
+      recordDelete_ = false;
+    } else if (recordDelete == 0x2A) {
+      recordDelete_ = true;
+    } else {
+      SPDLOG_WARN("read record delete tag failed");
+    }
+  }
 
   void setReadPos(size_t readPos) { readPos_ = readPos; }
   size_t readPos() const { return readPos_; }
